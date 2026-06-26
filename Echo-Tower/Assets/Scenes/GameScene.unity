@@ -828,7 +828,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CyberGridFloor
   lineColor: {r: 3.2420132, g: 0.17032167, b: 0.018350752, a: 1}
   bgColor: {r: 0.01132071, g: 0.01132071, b: 0.01132071, a: 1}
-  gridSize: 300
+  gridSize: 298
   lineThickness: 10
   tileCount: 30
   dustDensity: 0.015
