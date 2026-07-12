@@ -70,4 +70,11 @@ public class EnemyScript : MonoBehaviour
             Destroy(vfxObj, 2f);
         }
     }
+    public void Die()
+    {
+        // ★追加：コンボを追加する！
+        if (ComboManager.instance != null) { ComboManager.instance.AddCombo(); }
+
+        // 死亡時のエフェクト生成や、オブジェクトの破棄処理が続く...
+    }
 }

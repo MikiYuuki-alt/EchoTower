@@ -60,8 +60,9 @@ public class TowerManager : MonoBehaviour
         {
             StartCoroutine(DamageWarningRoutine());
         }
+        if (ComboManager.instance != null) { ComboManager.instance.ResetCombo(); }
     }
-
+     
     IEnumerator DamageWarningRoutine()
     {
         if (cameraShake != null)
