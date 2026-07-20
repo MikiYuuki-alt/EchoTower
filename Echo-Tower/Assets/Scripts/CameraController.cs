@@ -1,10 +1,10 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // ← 【重要】新しいシステムを使うための合言葉！
+using UnityEngine.InputSystem; 
 
 public class CameraController : MonoBehaviour
 {
     [Header("カメラが回るスピード")]
-    public float rotationSpeed = 0.2f; // ※新しいシステムは数値が大きく出るので、少し小さめに設定します
+    public float rotationSpeed = 0.2f; 
 
     void Update()
     {
