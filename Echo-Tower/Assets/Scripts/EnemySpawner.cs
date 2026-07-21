@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("湧かせたい敵のプレハブたち（複数登録できるよ！）")]
+    [Header("湧かせたい敵のプレハブたち")]
     public GameObject[] enemyPrefabs;
 
     [Header("敵が湧く間隔（秒）")]
@@ -11,7 +11,6 @@ public class EnemySpawner : MonoBehaviour
     [Header("塔からどれくらい離れたところに湧かせるか")]
     public float spawnRadius = 20f;
 
-    // ↓ここを追加！
     [Header("敵が湧く高さの範囲（最小と最大）")]
     public float minSpawnHeight = 0.5f; // 地面近く
     public float maxSpawnHeight = 10.0f; // かなり空中
@@ -44,13 +43,13 @@ public class EnemySpawner : MonoBehaviour
         float x = Mathf.Cos(angle) * spawnRadius;
         float z = Mathf.Sin(angle) * spawnRadius;
 
-        // 【ここがポイント！】高さをランダムにする
+        // 高さをランダムにする
         float randomY = Random.Range(minSpawnHeight, maxSpawnHeight);
 
         // 新しいランダムな3D位置を作る
         Vector3 spawnPosition = new Vector3(x, randomY, z);
 
-        // 3. くじ引きで選ばれた敵を、その位置に生み出す！
+        // 選ばれた敵を、その位置に生み出す
         Instantiate(selectedEnemy, spawnPosition, Quaternion.identity);
     }
 }

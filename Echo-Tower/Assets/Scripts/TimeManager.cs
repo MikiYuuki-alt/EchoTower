@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement; // シーン移動用
-using System.Collections; // 待ち時間（コルーチン）を使うための合言葉
+using UnityEngine.SceneManagement; 
+using System.Collections; 
 
 public class TimeManager : MonoBehaviour
 {
@@ -12,7 +12,7 @@ public class TimeManager : MonoBehaviour
     public TextMeshProUGUI timerText;
 
     [Header("クリア時に出すパネル")]
-    public GameObject clearPanel; // ★これを追加！
+    public GameObject clearPanel; 
 
     private float remainingTime;
     private bool isGameOver = false;
@@ -40,7 +40,7 @@ public class TimeManager : MonoBehaviour
         {
             remainingTime = 0f;
             isGameOver = true;
-            StartCoroutine(ClearRoutine()); // ★クリア演出をスタートする
+            StartCoroutine(ClearRoutine()); // クリア演出をスタートする
         }
 
         UpdateUIText();
@@ -56,7 +56,7 @@ public class TimeManager : MonoBehaviour
         }
     }
 
-    // ★クリア演出からタイトルに戻る一連の流れ
+    // クリア演出からタイトルに戻る一連の流れ
     IEnumerator ClearRoutine()
     {
         // 1. 隠しておいた「CLEAR!」のパネルをドカンと表示する

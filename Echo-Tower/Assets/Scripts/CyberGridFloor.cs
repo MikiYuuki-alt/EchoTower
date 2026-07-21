@@ -18,6 +18,7 @@ public class CyberGridFloor : MonoBehaviour
     void Start()
     {
         Texture2D tex = new Texture2D(gridSize, gridSize);
+        // 左下から右上に向かって、1ピクセル（画素）ずつ順番に処理していくループ
         for (int y = 0; y < gridSize; y++)
         {
             for (int x = 0; x < gridSize; x++)

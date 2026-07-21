@@ -7,6 +7,6 @@ public class TitleManager : MonoBehaviour
     public void StartGame()
     {
         // "GameScene" ‚ğ“Ç‚İ‚ñ‚ÅƒQ[ƒ€‚ğn‚ß‚éI
-        SceneManager.LoadScene("GameScene");
+        TransitionManager.instance.FadeToScene("GameScene");
     }
 }
