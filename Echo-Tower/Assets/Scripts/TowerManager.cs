@@ -14,6 +14,10 @@ public class TowerManager : MonoBehaviour
     [Header("画面を赤くするUI（DamageOverlay）")]
     public GameObject damageOverlay;
 
+    [Header("効果音")]
+    public AudioClip damageSE;
+    [Range(0f, 1f)] public float damageSEVolume = 1.0f;
+
     private CameraShake cameraShake;
     private float originalFontSize;
 
@@ -39,8 +43,14 @@ public class TowerManager : MonoBehaviour
 
         // 連続でダメージを受けた時、前の演出を一度止める
         StopAllCoroutines();
+        if (damageSE != null)
+        {
+            AudioSource.PlayClipAtPoint(damageSE, Camera.main.transform.position, damageSEVolume);
+        }
 
-        // ★【修正ポイント1】演出ストップで文字がバグるのを防ぐため、ここで一度確実にリセットする！
+        // 連続でダメージを受けた時、前の演出を一度止める
+        StopAllCoroutines();
+        // 演出ストップで文字がバグるのを防ぐため、ここで一度リセット
         if (hpText != null)
         {
             hpText.fontSize = originalFontSize;
@@ -74,10 +84,10 @@ public class TowerManager : MonoBehaviour
         {
             damageOverlay.SetActive(true);
 
-            // ★【修正ポイント2】文字をデカくしすぎない（1.1倍くらいにしてピクッとさせるだけ）
+            // 文字をデカくしすぎない（1.1倍くらい
             hpText.fontSize = originalFontSize * 1.1f;
 
-            // ★【修正ポイント3】文字の内容をガラッと変えるのではなく、元の文章を使う
+            // 文字の内容をガラッと変えるのではなく、元の文章を使う
             string normalText = "SYSTEM INTEGRITY: " + hp + "/3";
             string glitchText = "SY5T3M ERR0R... " + hp + "/3"; // 少しだけ文字化け
 
@@ -132,10 +142,10 @@ public class TowerManager : MonoBehaviour
             }
 
             hpText.color = Color.red;
-            hpText.text = ">>> SYSTEM OFFLINE <<<";
+            hpText.text = ">> SYSTEM OFFLINE <<";
         }
 
         yield return new WaitForSeconds(2f);
-        SceneManager.LoadScene("TitleScene");
+        TransitionManager.instance.FadeToScene("TitleScene");
     }
 }

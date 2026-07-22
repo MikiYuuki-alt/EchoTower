@@ -12,18 +12,25 @@ public class VoiceInputTest : MonoBehaviour
     public float neutralPitchIndex = 8f;
 
     [Header("波の厚み（平べったさ）")]
-    public float waveThickness = 0.1f; //
+    public float waveThickness = 0.1f;
 
     [Header("ノイズ対策（この数値以下の雑音は無視）")]
-    public float minVolumeThreshold = 0.01f; 
+    public float minVolumeThreshold = 0.01f;
 
     private AudioSource audioSource;
     private string micName;
     private float currentTargetHeight = 0f;
 
+    // 設定画面で操作するマイク感度
+    private float currentMicSensitivity = 1f;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+
+        // タイトル画面で保存したマイク感度を読み込む
+        // スライダーの0.5が「1倍」、1.0が「2倍」の感度になるように *2f しています
+        currentMicSensitivity = PlayerPrefs.GetFloat("MicSensitivity", 0.5f) * 2f;
 
         if (Microphone.devices.Length > 0)
         {
@@ -44,14 +51,13 @@ public class VoiceInputTest : MonoBehaviour
     {
         if (targetCube == null) return;
 
-        float volume = GetVolume();
+        // 取得した生の音量に、設定画面の感度（ブースト）を掛け
+        float volume = GetVolume() * currentMicSensitivity;
 
-        // 声を出している（しきい値以上の音量がある）時だけ高さを計算
         if (volume > minVolumeThreshold)
         {
             float pitchIndex = GetPitch();
 
-            // ピッチが正しく検出された場合のみ高さを更新
             if (pitchIndex > 0)
             {
                 currentTargetHeight = (pitchIndex - neutralPitchIndex) * pitchSensitivity;
@@ -59,7 +65,6 @@ public class VoiceInputTest : MonoBehaviour
         }
         else
         {
-            // 声を出していない時は、ゆっくり真ん中(Y=0)に戻る
             currentTargetHeight = 0f;
         }
 
@@ -72,16 +77,17 @@ public class VoiceInputTest : MonoBehaviour
         targetCube.position = Vector3.Lerp(targetCube.position, newPos, Time.deltaTime * 10f);
     }
 
+    // 音量計算を、より声に敏感に反応する「RMS方式」に改良
     float GetVolume()
     {
         float[] data = new float[256];
-        float a = 0;
         audioSource.GetOutputData(data, 0);
+        float sum = 0;
         foreach (float s in data)
         {
-            a += Mathf.Abs(s);
+            sum += s * s; // ただ足すのではなく、二乗（掛け算）して足す
         }
-        return a / 256f;
+        return Mathf.Sqrt(sum / 256f); // 最後にルートをかけて戻す
     }
 
     float GetPitch()
@@ -89,9 +95,8 @@ public class VoiceInputTest : MonoBehaviour
         float[] spectrum = new float[1024];
         audioSource.GetSpectrumData(spectrum, 0, FFTWindow.Rectangular);
         float maxV = 0;
-        int maxN = -1; // 検出できなかったら-1を返す
+        int maxN = -1;
 
-        // PCのファン音とかのノイズを無視するため、i=3 から判定をスタート
         for (int i = 3; i < 1024; i++)
         {
             if (spectrum[i] > maxV && spectrum[i] > 0.005f)
